@@ -402,6 +402,9 @@ uvc_error_t uvc_get_stream_ctrl_format_size(
 
             goto found;
           }
+          else {
+            printf("Frame interval did not match\n");
+          }
         }
       }
     }
