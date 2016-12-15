@@ -410,6 +410,59 @@ uvc_error_t uvc_uyvy2bgr(uvc_frame_t *in, uvc_frame_t *out) {
   return UVC_SUCCESS;
 }
 
+#define II4202BGR_2(pyuv, pbgr) { \
+    int r = (22987 * ((pyuv)[2] - 128)) >> 14; \
+    int g = (-5636 * ((pyuv)[0] - 128) - 11698 * ((pyuv)[2] - 128)) >> 14; \
+    int b = (29049 * ((pyuv)[0] - 128)) >> 14; \
+    (pbgr)[0] = sat((pyuv)[1] + b); \
+    (pbgr)[1] = sat((pyuv)[1] + g); \
+    (pbgr)[2] = sat((pyuv)[1] + r); \
+    (pbgr)[3] = sat((pyuv)[3] + b); \
+    (pbgr)[4] = sat((pyuv)[3] + g); \
+    (pbgr)[5] = sat((pyuv)[3] + r); \
+    }
+#define II4202BGR_16(pyuv, pbgr) IUYVY2BGR_8(pyuv, pbgr); IUYVY2BGR_8(pyuv + 16, pbgr + 24);
+#define II4202BGR_8(pyuv, pbgr) IUYVY2BGR_4(pyuv, pbgr); IUYVY2BGR_4(pyuv + 8, pbgr + 12);
+#define II4202BGR_4(pyuv, pbgr) IUYVY2BGR_2(pyuv, pbgr); IUYVY2BGR_2(pyuv + 4, pbgr + 6);
+
+/** @brief Convert a frame from I420 to BGR
+ * @ingroup frame
+ * @param ini UYVY frame
+ * @param out BGR frame
+ */
+uvc_error_t uvc_i4202bgr(uvc_frame_t *in, uvc_frame_t *out) {
+  if (in->frame_format != UVC_FRAME_FORMAT_I420)
+    return UVC_ERROR_INVALID_PARAM;
+
+  if (uvc_ensure_frame_size(out, in->width * in->height * 3) < 0)
+    return UVC_ERROR_NO_MEM;
+
+  out->width = in->width;
+  out->height = in->height;
+  out->frame_format = UVC_FRAME_FORMAT_BGR;
+  out->step = in->width *3;
+  out->sequence = in->sequence;
+  out->capture_time = in->capture_time;
+  out->source = in->source;
+
+  uint8_t *pyuv = in->data;
+  uint8_t *pbgr = out->data;
+  uint8_t *pbgr_end = pbgr + out->data_bytes;
+
+  while (pbgr < pbgr_end) {
+    IUYVY2BGR_8(pyuv, pbgr);
+
+    pbgr += 3 * 8;
+    pyuv += 1 * 8;
+  }
+
+  return UVC_SUCCESS;
+}
+
+uvc_error_t uvc_i4202rgb(uvc_frame_t *in, uvc_frame_t *out) {
+  return uvc_i4202bgr(in, out);
+}
+
 /** @brief Convert a frame to RGB
  * @ingroup frame
  *
@@ -422,6 +475,8 @@ uvc_error_t uvc_any2rgb(uvc_frame_t *in, uvc_frame_t *out) {
       return uvc_yuyv2rgb(in, out);
     case UVC_FRAME_FORMAT_UYVY:
       return uvc_uyvy2rgb(in, out);
+    case UVC_FRAME_FORMAT_I420:
+      return uvc_i4202rgb(in, out);
     case UVC_FRAME_FORMAT_RGB:
       return uvc_duplicate_frame(in, out);
     default:
@@ -441,6 +496,8 @@ uvc_error_t uvc_any2bgr(uvc_frame_t *in, uvc_frame_t *out) {
       return uvc_yuyv2bgr(in, out);
     case UVC_FRAME_FORMAT_UYVY:
       return uvc_uyvy2bgr(in, out);
+    case UVC_FRAME_FORMAT_I420:
+      return uvc_i4202bgr(in, out);
     case UVC_FRAME_FORMAT_BGR:
       return uvc_duplicate_frame(in, out);
     default:

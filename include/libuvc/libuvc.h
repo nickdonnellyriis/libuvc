@@ -63,13 +63,18 @@ enum uvc_frame_format {
    */
   UVC_FRAME_FORMAT_YUYV,
   UVC_FRAME_FORMAT_UYVY,
+  UVC_FRAME_FORMAT_I420,
+  UVC_FRAME_FORMAT_NV12,
   /** 24-bit RGB */
   UVC_FRAME_FORMAT_RGB,
   UVC_FRAME_FORMAT_BGR,
+  /** 16-bit RGB */
+  UVC_FRAME_FORMAT_RGBR,
   /** Motion-JPEG (or JPEG) encoded images */
   UVC_FRAME_FORMAT_MJPEG,
   UVC_FRAME_FORMAT_GRAY8,
   UVC_FRAME_FORMAT_BY8,
+  UVC_FRAME_FORMAT_Y16,
   /** Number of formats understood */
   UVC_FRAME_FORMAT_COUNT,
 };
@@ -81,10 +86,12 @@ enum uvc_frame_format {
 #define UVC_COLOR_FORMAT_COMPRESSED UVC_FRAME_FORMAT_COMPRESSED
 #define UVC_COLOR_FORMAT_YUYV UVC_FRAME_FORMAT_YUYV
 #define UVC_COLOR_FORMAT_UYVY UVC_FRAME_FORMAT_UYVY
+#define UVC_COLOR_FORMAT_I420 UVC_FRAME_FORMAT_I420
 #define UVC_COLOR_FORMAT_RGB UVC_FRAME_FORMAT_RGB
 #define UVC_COLOR_FORMAT_BGR UVC_FRAME_FORMAT_BGR
 #define UVC_COLOR_FORMAT_MJPEG UVC_FRAME_FORMAT_MJPEG
 #define UVC_COLOR_FORMAT_GRAY8 UVC_FRAME_FORMAT_GRAY8
+#define UVC_COLOR_FORMAT_Y16 UVC_FRAME_FORMAT_Y16
 
 /** VideoStreaming interface descriptor subtype (A.6) */
 enum uvc_vs_desc_subtype {
@@ -708,10 +715,12 @@ uvc_error_t uvc_duplicate_frame(uvc_frame_t *in, uvc_frame_t *out);
 
 uvc_error_t uvc_yuyv2rgb(uvc_frame_t *in, uvc_frame_t *out);
 uvc_error_t uvc_uyvy2rgb(uvc_frame_t *in, uvc_frame_t *out);
+uvc_error_t uvc_i4202rgb(uvc_frame_t *in, uvc_frame_t *out);
 uvc_error_t uvc_any2rgb(uvc_frame_t *in, uvc_frame_t *out);
 
 uvc_error_t uvc_yuyv2bgr(uvc_frame_t *in, uvc_frame_t *out);
 uvc_error_t uvc_uyvy2bgr(uvc_frame_t *in, uvc_frame_t *out);
+uvc_error_t uvc_i4202bgr(uvc_frame_t *in, uvc_frame_t *out);
 uvc_error_t uvc_any2bgr(uvc_frame_t *in, uvc_frame_t *out);
 
 uvc_error_t uvc_yuyv2y(uvc_frame_t *in, uvc_frame_t *out);
