@@ -9,7 +9,7 @@ Prerequisites: You will need `libusb` and [CMake](http://www.cmake.org/) install
 
 To build, you can just run these shell commands:
 
-    git clone https://github.com/pupil-labs/libuvc
+    git clone https://github.com/groupgets/libuvc
     cd libuvc
     mkdir build
     cd build
