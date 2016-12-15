@@ -1089,12 +1089,8 @@ void _uvc_populate_frame(uvc_stream_handle_t *strmh) {
   /** @todo set the frame time */
   frame->sequence = strmh->hold_seq;
   frame->capture_time.tv_usec = strmh->hold_pts;
-  if (frame->data_bytes < strmh->hold_bytes) {
-    frame->data = realloc(frame->data, strmh->hold_bytes);
-  }
-  /* copy the image data from the hold buffer to the frame (unnecessary extra buf?) */
   frame->data_bytes = strmh->hold_bytes;
-  memcpy(frame->data, strmh->holdbuf, frame->data_bytes);
+  frame->data = strmh->holdbuf;
 
 }
 
@@ -1242,9 +1238,6 @@ void uvc_stream_close(uvc_stream_handle_t *strmh) {
     uvc_stream_stop(strmh);
 
   uvc_release_if(strmh->devh, strmh->stream_if->bInterfaceNumber);
-
-  if (strmh->frame.data)
-    free(strmh->frame.data);
 
   free(strmh->outbuf);
   free(strmh->holdbuf);
