@@ -71,13 +71,8 @@ else()
   message(WARNING "JPEG not found. libuvc will not support JPEG decoding.")
 endif()
 
-if(${CMAKE_BUILD_TARGET} MATCHES "Shared")
-  add_library(uvc SHARED ${SOURCES})
-elseif(${CMAKE_BUILD_TARGET} MATCHES "Static")
-  add_library(uvc STATIC ${SOURCES})
-else()
-  message( FATAL_ERROR "Invalid build type ${CMAKE_BUILD_TARGET}" )
-endif()
+add_library(uvc SHARED ${SOURCES})
+add_library(uvcstatic STATIC ${SOURCES})
 
 configure_file(include/libuvc/libuvc_config.h.in
   ${PROJECT_BINARY_DIR}/include/libuvc/libuvc_config.h @ONLY)
