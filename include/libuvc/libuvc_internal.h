@@ -216,7 +216,7 @@ typedef struct uvc_device_info {
 #ifdef __APPLE__
 #define LIBUVC_NUM_TRANSFER_BUFS 8
 #else
-#define LIBUVC_NUM_TRANSFER_BUFS 100
+#define LIBUVC_NUM_TRANSFER_BUFS 8
 #endif
 
 #define LIBUVC_XFER_BUF_SIZE	( 16 * 1024 * 1024 )
