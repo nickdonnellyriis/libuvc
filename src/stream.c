@@ -401,7 +401,7 @@ uvc_error_t uvc_get_stream_ctrl_format_size(
             }
           }
         } else {
-          uint32_t interval_100ns = 10000000 / fps;
+          uint32_t interval_100ns = ((fps == 0) ? frame->dwMinFrameInterval : 10000000 / fps);
           uint32_t interval_offset = interval_100ns - frame->dwMinFrameInterval;
 
           if (interval_100ns >= frame->dwMinFrameInterval
