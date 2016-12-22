@@ -1038,7 +1038,8 @@ void *_uvc_user_caller(void *arg) {
 
     pthread_mutex_unlock(&strmh->cb_mutex);
 
-    if (strmh->hold_bytes == strmh->cur_ctrl.dwMaxVideoFrameSize)
+    if (strmh->hold_bytes == strmh->cur_ctrl.dwMaxVideoFrameSize ||
+            strmh->transfers[0]->num_iso_packets == 0)
         strmh->user_cb(&strmh->frame, strmh->user_ptr);
   } while(1);
 
