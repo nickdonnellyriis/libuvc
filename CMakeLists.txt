@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 2.8)
+cmake_minimum_required(VERSION 3.1)
 project(libuvc)
 
 if (NOT CMAKE_BUILD_TYPE)
@@ -23,6 +23,9 @@ find_library(LIBUSB_LIBRARY_NAMES usb-1.0
 
 find_path(LIBUSB_INCLUDE_DIR libusb-1.0/libusb.h
 	PATHS /opt/local/include)
+
+set(THREADS_PREFER_PTHREAD_FLAG ON)
+find_package(Threads REQUIRED)
 
 # Try to find JPEG using a module or pkg-config. If that doesn't work, search for the header.
 # find_package(jpeg QUIET)
@@ -71,6 +74,7 @@ if(JPEG_FOUND)
   target_link_libraries (uvc ${JPEG_LIBRARIES})
 endif(JPEG_FOUND)
 
+target_link_libraries(uvc Threads::Threads)
 target_link_libraries(uvc ${LIBUSB_LIBRARY_NAMES})
 
 #add_executable(test src/test.c)
